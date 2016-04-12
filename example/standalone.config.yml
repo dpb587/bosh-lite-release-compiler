@@ -1,0 +1,30 @@
+---
+# what stemcell series do you want to compile on?
+stemcell_bucket: "bosh-warden-stemcells"
+stemcell_regexp: "bosh-stemcell-([^\\-]+)-warden-boshlite-ubuntu-trusty-go_agent\\.tgz"
+stemcell_access_key_id: ~
+stemcell_secret_access_key: ~
+
+# where is the release published?
+release_bucket: "acme-bosh-release-widgetpro-us-east-1"
+release_regexp: "release/source/widgetpro-(.+)\\.tgz"
+release_access_key_id: ~
+release_secret_access_key: ~
+
+# where should the compiled releases be published?
+compiled_bucket: "acme-bosh-release-widgetpro-us-east-1"
+compiled_regexp: "release/compiled/release-widgetpro-(?P<ReleaseVersion>[^\\-]+)-on-(?P<OsName>[^-]+)-(?P<OsVersion>[^-]+)-(?P<Version>.+)\\.tgz"
+compiled_access_key_id: "my-aws-access-key"
+compiled_secret_access_key: "my-aws-secret-key"
+
+# settings for the bosh-lite vm
+boshlite_access_key: "my-aws-access-key"
+boshlite_availability_zone: "us-east-1a"
+boshlite_name: "acme-widgetpro-on-ubuntu-trusty"
+boshlite_instance_type: "c3.xlarge"
+boshlite_key_name: "default"
+boshlite_private_ip: ~
+boshlite_secret_key: "my-aws-secret-key"
+boshlite_security_group_id: "sg-a1b2c3d4"
+boshlite_subnet_id: "subnet-b2c3d4e5"
+compilation_workers: 4

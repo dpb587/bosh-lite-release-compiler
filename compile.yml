@@ -1,0 +1,15 @@
+---
+platform: "linux"
+image: "docker:///concourse/bosh-deployment-resource"
+inputs:
+  - name: "bosh-lite"
+  - name: "bosh-lite-release-compiler"
+  - name: "release"
+  - name: "stemcell"
+outputs:
+  - name: "compiled-release"
+run:
+  path: "bosh-lite-release-compiler/compile.sh"
+params:
+  compilation_workers: 4
+  target_file: "bosh-lite/target"

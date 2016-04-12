@@ -1,0 +1,71 @@
+---
+jobs:
+  - name: "compile-release"
+    plan:
+      - aggregate:
+          - get: "release"
+            trigger: true
+          - get: "stemcell"
+            trigger: true
+          - get: "bosh-lite-release-compiler"
+      - put: "bosh-lite"
+      - do:
+          - task: "compile-release"
+            file: "bosh-lite-release-compiler/compile.yml"
+            params:
+              target_file: "bosh-lite/target"
+              compilation_workers: {{compilation_workers}}
+          - put: "compiled-release"
+            params:
+              file: "compiled-release/*.tgz"
+        ensure:
+          put: "bosh-lite"
+          params:
+            delete: true
+          get_params:
+            allow_deleted: true
+resources:
+  - name: "release"
+    type: "s3"
+    source:
+      bucket: {{release_bucket}}
+      regexp: {{release_regexp}}
+      access_key_id: {{release_access_key_id}}
+      secret_access_key: {{release_secret_access_key}}
+  - name: "stemcell"
+    type: "s3"
+    source:
+      bucket: {{stemcell_bucket}}
+      regexp: {{stemcell_regexp}}
+      access_key_id: {{stemcell_access_key_id}}
+      secret_access_key: {{stemcell_secret_access_key}}
+  - name: "compiled-release"
+    type: "s3"
+    source:
+      bucket: {{compiled_bucket}}
+      regexp: {{compiled_regexp}}
+      access_key_id: {{compiled_access_key_id}}
+      secret_access_key: {{compiled_secret_access_key}}
+  - name: "bosh-lite"
+    type: "aws-bosh-lite"
+    source:
+      access_key: {{boshlite_access_key}}
+      availability_zone: {{boshlite_availability_zone}}
+      instance_type: {{boshlite_instance_type}}
+      key_name: {{boshlite_key_name}}
+      name: {{boshlite_name}}
+      private_ip: {{boshlite_private_ip}}
+      secret_key: {{boshlite_secret_key}}
+      security_group_id: {{boshlite_security_group_id}}
+      subnet_id: {{boshlite_subnet_id}}
+  - name: "bosh-lite-release-compiler"
+    type: "git"
+    source:
+      uri: "https://github.com/dpb587/bosh-lite-release-compiler.git"
+      branch: "master"
+resource_types:
+  - name: "aws-bosh-lite"
+    type: "docker-image"
+    source:
+      repository: "dpb587/aws-bosh-lite-resource"
+      tag: "master"
