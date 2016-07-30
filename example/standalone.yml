@@ -1,6 +1,7 @@
 ---
 jobs:
   - name: "compile-release"
+    serial: true
     plan:
       - aggregate:
           - get: "release"
